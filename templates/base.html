@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Not Uygulaması</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Menü</h2>
+      </div>
+      <nav class="nav">
+        <a class="nav-item active" href="#">Tüm Notlar</a>
+        <a class="nav-item" href="#">Yeni Not Ekle</a>
+        <a class="nav-item" href="#">Tamamlananlar</a>
+        <a class="nav-item" href="#">Zamanı Yaklaşanlar</a>
+        <a class="nav-item" href="#">Yıldızlılar</a>
+        <a class="nav-item" href="#">Notlarım</a>
+        <a class="nav-item" href="#">Ayarlar</a>
+        <a class="nav-item" href="#">Çıkış</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>Tüm Notlar</h1>
+        <div class="user-icon">TK</div>
+      </header>
+
+      <section class="content">
+        {% block content %}{% endblock %}
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="add-new">
+  <button class="btn-new">+ Yeni Not Ekle</button>
+</div>
+
+<div class="cards-grid">
+  <!-- Örnek kartlar; ileride dinamik olarak DB'den gelecek -->
+  <div class="card">
+    <h3>Proje Planı</h3>
+    <p>Kısa özet: Flask ile temel not uygulaması için planlama.</p>
+  </div>
+
+  <div class="card">
+    <h3>Alışveriş Listesi</h3>
+    <p>Süt, Ekmek, Yumurta</p>
+  </div>
+
+  <div class="card">
+    <h3>Haftalık Rapor</h3>
+    <p>Yapılacaklar ve notlar...</p>
+  </div>
+
+  <div class="card">
+    <h3>Düzenle</h3>
+    <p>UI düzenlemeleri, responsive kontrolü.</p>
+  </div>
+</div>
+{% endblock %}
