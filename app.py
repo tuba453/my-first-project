@@ -33,9 +33,10 @@ def create_app():
     app.config['MAIL_DEFAULT_SENDER'] = ('Görev Yöneticisi', os.environ.get('MAIL_USERNAME'))
 
     # CELERY YAPILANDIRMASI
-    app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
-    app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
-    app.config['CELERY_IMPORTS'] = ('tasks',)
+    app.config.update(
+        CELERY_BROKER_URL=os.environ.get('CELERY_BROKER_URL'),
+        CELERY_RESULT_BACKEND=os.environ.get('CELERY_RESULT_BACKEND')
+    )
 
     db.init_app(app)
     migrate = Migrate(app, db)
