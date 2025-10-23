@@ -34,7 +34,7 @@ services:
     env: python
     buildCommand: "pip install -r requirements.txt" # Sadece kütüphaneleri kur
     schedule: "0 * * * *" # Her saatin başında çalışır
-    startCommand: "celery -A app.celery call tasks.send_reminder_emails"
+    startCommand: "celery -A app.app.extensions.celery call tasks.send_reminder_emails"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0

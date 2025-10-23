@@ -45,6 +45,7 @@ def create_app():
 
     db.init_app(app)
     migrate = Migrate(app, db)
+    Mail(app) # Mail nesnesini burada başlat
 
     login_manager = LoginManager()
     login_manager.login_view = "auth.login" 
@@ -67,8 +68,8 @@ def create_app():
             return redirect(url_for("dashboard.home"))
         return redirect(url_for("auth.welcome"))
 
+    # Celery'yi uygulama bağlamı içinde yapılandır
+    app.extensions["celery"] = make_celery(app)
     return app
 
 app = create_app()
-mail = Mail(app)
-celery = make_celery(app)

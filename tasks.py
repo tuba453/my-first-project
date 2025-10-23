@@ -3,7 +3,6 @@ from flask_mail import Message
 from datetime import datetime, timedelta
 from flask import current_app
 from models import db, Task, User
-
 @shared_task(ignore_result=True)
 def send_reminder_emails():
     """
