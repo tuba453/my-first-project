@@ -52,6 +52,11 @@ services:
           type: redis
           name: task-manager-redis
           property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: task-manager-redis
+          property: connectionString
 
   # 3. Redis Servisi (Celery için)
   - type: redis

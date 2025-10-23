@@ -1,14 +1,16 @@
 from celery import shared_task
 from flask_mail import Message
 from datetime import datetime, timedelta
+from flask import current_app
 from models import db, Task, User
-from app import mail, app
 
 @shared_task(ignore_result=True)
 def send_reminder_emails():
     """
     Vadesi 24 saat içinde dolacak olan ve henüz hatırlatma gönderilmemiş görevleri bulup e-posta gönderir.
     """
+    # DÜZELTME: Doğrudan import etmek yerine, 'current_app' proxy'sini kullan.
+    app = current_app
     with app.app_context():
         now = datetime.utcnow()
         reminder_window = now + timedelta(hours=24)
@@ -29,6 +31,11 @@ def send_reminder_emails():
 
         for task in tasks_to_remind:
             try:
+                # DÜZELTME: 'mail' nesnesini app'in eklentilerinden al.
+                mail = app.extensions.get('mail')
+                if not mail:
+                    print("Flask-Mail eklentisi bulunamadı.")
+                    continue
                 msg = Message(
                     subject=f"Yaklaşan Görev Hatırlatması: {task.title}",
                     recipients=[task.user.email],
