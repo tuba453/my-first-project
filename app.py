@@ -8,17 +8,6 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from celery import Celery, Task as CeleryTask
 
-def make_celery(app):
-    class FlaskTask(CeleryTask):
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return self.run(*args, **kwargs)
-
-    celery_app = Celery(app.import_name, task_cls=FlaskTask)
-    celery_app.config_from_object(app.config, namespace="CELERY")
-    celery_app.set_default()
-    app.extensions["celery"] = celery_app
-    return celery_app
 
 def create_app():
     app = Flask(__name__)
@@ -70,4 +59,17 @@ def create_app():
 
     return app
 
+def make_celery(app):
+    class FlaskTask(CeleryTask):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery_app = Celery(app.import_name, task_cls=FlaskTask)
+    celery_app.config_from_object(app.config, namespace="CELERY")
+    celery_app.set_default()
+    app.extensions["celery"] = celery_app
+    return celery_app
+
 app = create_app()
+celery = make_celery(app)
