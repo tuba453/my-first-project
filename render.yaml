@@ -1,0 +1,86 @@
+# render.yaml
+
+services:
+  # 1. Web Servisi (Flask Uygulaması)
+  - type: web
+    name: task-manager-web
+    env: python
+    plan: free # Ücretsiz planı kullan
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn 'app:app'"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0 # Kullandığınız Python sürümünü belirtin
+      - key: SECRET_KEY
+        generateValue: true # Render'dan güvenli bir anahtar oluşturmasını iste
+      - key: DATABASE_URL
+        fromService:
+          type: psql
+          name: task-manager-db
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: task-manager-redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: task-manager-redis
+          property: connectionString
+      # DİKKAT: Bu değerleri Render Dashboard'daki "Environment" sekmesinden kendiniz eklemelisiniz!
+      # - key: MAIL_USERNAME
+      #   value: "your-gmail-username@gmail.com"
+      # - key: MAIL_PASSWORD
+      #   value: "your-gmail-app-password"
+
+  # 2. Arka Plan Çalışanı (Celery Worker)
+  - type: worker
+    name: task-manager-worker
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A app.celery worker --loglevel=info"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        fromService:
+          type: web
+          name: task-manager-web
+          envVarKey: SECRET_KEY
+      - key: DATABASE_URL
+        fromService:
+          type: psql
+          name: task-manager-db
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: task-manager-redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: task-manager-redis
+          property: connectionString
+      # DİKKAT: Bu değerleri de Render Dashboard'dan eklemelisiniz!
+      # - key: MAIL_USERNAME
+      #   value: "your-gmail-username@gmail.com"
+      # - key: MAIL_PASSWORD
+      #   value: "your-gmail-app-password"
+
+  # 3. Veritabanı (PostgreSQL)
+  - type: psql
+    name: task-manager-db
+    plan: free # Ücretsiz planlar 90 gün sonra silinir.
+    # Gerçek bir proje için ücretli plana geçmeyi düşünün.
+
+  # 4. Redis (Celery için)
+  - type: redis
+    name: task-manager-redis
+    plan: free
+
+databases:
+  - name: task-manager-db
+    plan: free
