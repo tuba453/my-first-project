@@ -28,13 +28,14 @@ services:
           name: task-manager-redis
           property: connectionString
 
-  # 2. Arka Plan Çalışanı (Celery Worker)
-  - type: worker
-    name: task-manager-worker
+  # 2. Zamanlanmış Görev (E-posta Hatırlatıcıları için)
+  - type: cron
+    name: email-reminders
     env: python
     plan: free
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "celery -A app.celery worker --loglevel=info"
+    schedule: "0 * * * *" # Her saatin başında çalışır
+    command: "celery -A app.celery call tasks.send_reminder_emails"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -48,11 +49,6 @@ services:
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
-        fromService:
-          type: redis
-          name: task-manager-redis
-          property: connectionString
-      - key: CELERY_RESULT_BACKEND
         fromService:
           type: redis
           name: task-manager-redis
