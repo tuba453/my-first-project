@@ -59,14 +59,14 @@ services:
           type: redis
           name: task-manager-redis
           property: connectionString
+  # 3. Redis Servisi (Celery için)
+  - type: redis
+    name: task-manager-redis
+    plan: free
+    ipAllowList: [] # Sadece Render içinden erişime izin verir.
+    maxmemoryPolicy: allkeys-lru # Ücretsiz Redis planları için önerilir.
 
-# PostgreSQL veritabanını tanımlamak için kullanılan doğru üst düzey blok budur.
+# PostgreSQL veritabanını tanımlamak için kullanılan doğru üst düzey blok
 databases:
   - name: task-manager-db
     plan: free
-
-# Redis servisini tanımlamak için kullanılan doğru üst düzey blok budur.
-redis:
-  - name: task-manager-redis
-    plan: free
-    ipAllowList: [] # HATA DÜZELTİLDİ: Boş liste, sadece Render içinden erişime izin verir.
