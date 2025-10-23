@@ -67,13 +67,3 @@ def create_app():
 app = create_app()
 mail = Mail(app)
 celery = make_celery(app)
-
-@celery.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
-    import tasks # tasks.py dosyasını import et
-    # Her saat başı send_reminder_emails görevini çalıştır
-    sender.add_periodic_task(
-        3600.0, 
-        tasks.send_reminder_emails.s(), 
-        name='Her saat başı hatırlatıcıları kontrol et'
-    )

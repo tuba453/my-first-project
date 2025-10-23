@@ -32,7 +32,6 @@ services:
   - type: cron
     name: email-reminders
     env: python
-    plan: free
     buildCommand: "pip install -r requirements.txt"
     schedule: "0 * * * *" # Her saatin başında çalışır
     startCommand: "celery -A app.celery call tasks.send_reminder_emails"
