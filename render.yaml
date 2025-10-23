@@ -1,8 +1,5 @@
 # render.yaml
 
-# Render tarafından desteklenen üst düzey anahtarlar: 'services', 'databases', 'redis'
-# Tüm Web, Worker, Cron hizmetleri 'services' altına gider.
-
 services:
   # 1. Web Servisi (Flask Uygulaması)
   - type: web
@@ -16,10 +13,9 @@ services:
         value: 3.11.0
       - key: SECRET_KEY
         generateValue: true
-      # DÜZELTME: type: psql yerine type: database kullanıldı.
       - key: DATABASE_URL
         fromService:
-          type: database 
+          type: psql # HATA DÜZELTİLDİ: 'database' yerine 'psql' kullanılmalı.
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
@@ -32,7 +28,6 @@ services:
           type: redis
           name: task-manager-redis
           property: connectionString
-      # ... diğer envVars
 
   # 2. Arka Plan Çalışanı (Celery Worker)
   - type: worker
@@ -42,11 +37,16 @@ services:
     buildCommand: "pip install -r requirements.txt"
     startCommand: "celery -A app.celery worker --loglevel=info"
     envVars:
-      # ... diğer envVars
-      # DÜZELTME: type: psql yerine type: database kullanıldı.
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        fromService:
+          type: web
+          name: task-manager-web
+          envVarKey: SECRET_KEY
       - key: DATABASE_URL
         fromService:
-          type: database  
+          type: psql # HATA DÜZELTİLDİ: 'database' yerine 'psql' kullanılmalı.
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
@@ -59,19 +59,14 @@ services:
           type: redis
           name: task-manager-redis
           property: connectionString
-      # ... diğer envVars
-
-  # 3. Redis (Celery için)
-  - type: redis
-    name: task-manager-redis
-    plan: free
-    # NOT: services bloğundan "type: psql" tanımı tamamen kaldırıldı.
 
 # PostgreSQL veritabanını tanımlamak için kullanılan doğru üst düzey blok budur.
 databases:
   - name: task-manager-db
     plan: free
-    ipAllowList:
-      - source: 0.0.0.0/0 # Tüm IP'lerden erişime izin verir (Dikkatli kullanın!)
-        description: Dahili Render hizmetleri
-    # Bu tanım, task-manager-db adlı bir PostgreSQL veritabanı oluşturacaktır.
+
+# Redis servisini tanımlamak için kullanılan doğru üst düzey blok budur.
+redis:
+  - name: task-manager-redis
+    plan: free
+    ipAllowList: [] # HATA DÜZELTİLDİ: Boş liste, sadece Render içinden erişime izin verir.
