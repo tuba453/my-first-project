@@ -65,8 +65,7 @@ services:
     plan: free
     ipAllowList: [] # Sadece Render içinden erişime izin verir.
     maxmemoryPolicy: allkeys-lru # Ücretsiz Redis planları için önerilir.
-
-# PostgreSQL veritabanını tanımlamak için kullanılan doğru üst düzey blok
-databases:
-  - name: task-manager-db
+  # 4. Veritabanı Servisi (PostgreSQL)
+  - type: psql
+    name: task-manager-db
     plan: free
