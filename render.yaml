@@ -15,7 +15,7 @@ services:
         generateValue: true
       - key: DATABASE_URL
         fromService:
-          type: psql # HATA DÜZELTİLDİ: 'database' yerine 'psql' kullanılmalı.
+          type: database # DÜZELTME: 'psql' yerine 'database' kullanılmalı
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
@@ -46,7 +46,7 @@ services:
           envVarKey: SECRET_KEY
       - key: DATABASE_URL
         fromService:
-          type: psql # HATA DÜZELTİLDİ: 'database' yerine 'psql' kullanılmalı.
+          type: database # DÜZELTME: 'psql' yerine 'database' kullanılmalı
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
@@ -59,13 +59,15 @@ services:
           type: redis
           name: task-manager-redis
           property: connectionString
-  # 3. Redis Servisi (Celery için)
-  - type: redis
-    name: task-manager-redis
+
+# PostgreSQL veritabanını tanımlamak için doğru üst düzey blok
+databases:
+  - name: task-manager-db
+    plan: free
+
+# Redis servisini tanımlamak için doğru üst düzey blok
+redis:
+  - name: task-manager-redis
     plan: free
     ipAllowList: [] # Sadece Render içinden erişime izin verir.
     maxmemoryPolicy: allkeys-lru # Ücretsiz Redis planları için önerilir.
-  # 4. Veritabanı Servisi (PostgreSQL)
-  - type: psql
-    name: task-manager-db
-    plan: free
