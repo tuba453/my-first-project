@@ -24,6 +24,11 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    # DÜZELTME: Render'ın sağladığı veritabanı URL'sini al ve ayarla
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url and database_url.startswith("postgres://"):
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url.replace("postgres://", "postgresql://", 1)
+
     # E-POSTA YAPILANDIRMASI
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 587
