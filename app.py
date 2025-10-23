@@ -21,6 +21,9 @@ def create_app():
             database_url = database_url.replace("postgres://", "postgresql://", 1)
         app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 
+    print(f"DEBUG: DATABASE_URL from environment: {os.environ.get('DATABASE_URL')}")
+    print(f"DEBUG: Final SQLALCHEMY_DATABASE_URI: {app.config.get('SQLALCHEMY_DATABASE_URI')}")
+
     # E-POSTA YAPILANDIRMASI
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 587
