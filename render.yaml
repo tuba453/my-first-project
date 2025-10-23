@@ -1,21 +1,25 @@
 # render.yaml
 
+# Render tarafından desteklenen üst düzey anahtarlar: 'services', 'databases', 'redis'
+# Tüm Web, Worker, Cron hizmetleri 'services' altına gider.
+
 services:
   # 1. Web Servisi (Flask Uygulaması)
   - type: web
     name: task-manager-web
     env: python
-    plan: free # Ücretsiz planı kullan
+    plan: free
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn 'app:app'"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0 # Kullandığınız Python sürümünü belirtin
+        value: 3.11.0
       - key: SECRET_KEY
-        generateValue: true # Render'dan güvenli bir anahtar oluşturmasını iste
+        generateValue: true
+      # DÜZELTME: type: psql yerine type: database kullanıldı.
       - key: DATABASE_URL
         fromService:
-          type: psql
+          type: database  # <<< Düzeltildi
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
@@ -28,11 +32,7 @@ services:
           type: redis
           name: task-manager-redis
           property: connectionString
-      # DİKKAT: Bu değerleri Render Dashboard'daki "Environment" sekmesinden kendiniz eklemelisiniz!
-      # - key: MAIL_USERNAME
-      #   value: "your-gmail-username@gmail.com"
-      # - key: MAIL_PASSWORD
-      #   value: "your-gmail-app-password"
+      # ... diğer envVars
 
   # 2. Arka Plan Çalışanı (Celery Worker)
   - type: worker
@@ -42,16 +42,11 @@ services:
     buildCommand: "pip install -r requirements.txt"
     startCommand: "celery -A app.celery worker --loglevel=info"
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
-      - key: SECRET_KEY
-        fromService:
-          type: web
-          name: task-manager-web
-          envVarKey: SECRET_KEY
+      # ... diğer envVars
+      # DÜZELTME: type: psql yerine type: database kullanıldı.
       - key: DATABASE_URL
         fromService:
-          type: psql
+          type: database  # <<< Düzeltildi
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
@@ -64,23 +59,16 @@ services:
           type: redis
           name: task-manager-redis
           property: connectionString
-      # DİKKAT: Bu değerleri de Render Dashboard'dan eklemelisiniz!
-      # - key: MAIL_USERNAME
-      #   value: "your-gmail-username@gmail.com"
-      # - key: MAIL_PASSWORD
-      #   value: "your-gmail-app-password"
+      # ... diğer envVars
 
-  # 3. Veritabanı (PostgreSQL)
-  - type: psql
-    name: task-manager-db
-    plan: free # Ücretsiz planlar 90 gün sonra silinir.
-    # Gerçek bir proje için ücretli plana geçmeyi düşünün.
-
-  # 4. Redis (Celery için)
+  # 3. Redis (Celery için)
   - type: redis
     name: task-manager-redis
     plan: free
+    # NOT: services bloğundan "type: psql" tanımı tamamen kaldırıldı.
 
+# PostgreSQL veritabanını tanımlamak için kullanılan doğru üst düzey blok budur.
 databases:
   - name: task-manager-db
     plan: free
+    # Bu tanım, task-manager-db adlı bir PostgreSQL veritabanı oluşturacaktır.
