@@ -6,7 +6,7 @@ services:
     name: task-manager-web
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt && python init_db.py" # Kütüphaneleri kur ve veritabanını başlat
+    buildCommand: "pip install -r requirements.txt" # Sadece kütüphaneleri kur
     startCommand: "gunicorn app:app"
     envVars:
       - key: PYTHON_VERSION

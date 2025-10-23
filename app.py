@@ -58,6 +58,12 @@ def create_app():
             return redirect(url_for("dashboard.home"))
         return redirect(url_for("auth.welcome"))
 
+    # UYGULAMA BAĞLAMI İÇİNDE VERİTABANI OLUŞTURMA
+    # Bu kod, uygulama ilk başladığında çalışır ve tabloların var olup olmadığını kontrol eder.
+    # Eğer tablolar yoksa, `db.create_all()` komutu ile oluşturur.
+    with app.app_context():
+        db.create_all()
+
     return app
 
 def make_celery(app):
