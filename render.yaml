@@ -6,7 +6,7 @@ services:
     name: task-manager-web
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: "pip install -r requirements.txt && python init_db.py" # Kütüphaneleri kur ve veritabanını başlat
     startCommand: "gunicorn 'app:create_app()'"
     envVars:
       - key: PYTHON_VERSION
@@ -32,7 +32,7 @@ services:
   - type: cron
     name: email-reminders
     env: python
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: "pip install -r requirements.txt" # Sadece kütüphaneleri kur
     schedule: "0 * * * *" # Her saatin başında çalışır
     startCommand: "celery -A app.celery call tasks.send_reminder_emails"
     envVars:
@@ -48,11 +48,6 @@ services:
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
-        fromService:
-          type: redis
-          name: task-manager-redis
-          property: connectionString
-      - key: CELERY_RESULT_BACKEND
         fromService:
           type: redis
           name: task-manager-redis
