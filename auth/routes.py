@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 auth_bp = Blueprint('auth', __name__, template_folder="../templates")
 
-# YENİ: Karşılama Ekranı
+# Karşılama Ekranı
 @auth_bp.route('/welcome')
 def welcome():
     return render_template('welcome.html')
@@ -34,7 +34,7 @@ def login():
         # 3. Kullanıcı bulunduysa ve şifre doğruysa
         if user and user.check_password(password):
             login_user(user)
-            session['show_welcome_modal'] = True # YENİ: Modal göstermek için işaretçi
+            session['show_welcome_modal'] = True 
             flash(f"Hoş geldin, {user.username}!", "success")
             return redirect(url_for('dashboard.home'))
         
@@ -77,7 +77,7 @@ def register():
 @auth_bp.route('/logout')
 @login_required
 def logout():
-    # Mevcut "Hoş geldin" gibi eski flash mesajlarını temizle
+    # eski flash mesajlarını temizle
     session.pop('_flashes', None)
     logout_user()
     flash("Görüşmek üzere! Tekrar bekleriz.", "success")
@@ -106,5 +106,5 @@ def delete_account_with_password():
     
 @auth_bp.route('/account_deleted_page')
 def account_deleted_page():
-    # Bu, sadece account_deleted.html içeriğini (layoutsuz) döner
+
     return render_template('account_deleted.html')   

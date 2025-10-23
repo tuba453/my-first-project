@@ -1,11 +1,11 @@
-# dashboard/routes.py (Final Sürümü)
+# dashboard/routes.py 
 from flask import flash, redirect, render_template, request, jsonify, url_for, Blueprint, session
 from models import db, Note, Task, User, Tag, Badge
-import os # YENİ: Avatar dosyalarını listelemek için
-import bleach # GÜVENLİK İÇİN EKLENDİ
+import os # Avatar dosyalarını listelemek için
+import bleach # GÜVENLİK İÇİN 
 from flask_login import login_required, current_user
 from datetime import datetime, timedelta
-import random # YENİ: Rastgele mesaj seçimi için
+import random # Rastgele mesaj seçimi için
 
 # Blueprint tanımlaması
 dashboard_bp = Blueprint('dashboard', __name__, template_folder="../templates")
@@ -14,7 +14,6 @@ dashboard_bp = Blueprint('dashboard', __name__, template_folder="../templates")
 @dashboard_bp.route('/')
 @login_required
 def home():
-    # Oturum kontrolünü kaldırıp her zaman gösterilecek şekilde ayarlandı.
     show_modal = True
     messages = [
         "Bugün harika işler başaracaksın!",
@@ -27,7 +26,7 @@ def home():
 
     return render_template('base.html', show_welcome_modal=show_modal, motivational_message=motivational_message)
 
-# --- YENİ: ROZET SİSTEMİ ---
+# --- ROZET SİSTEMİ ---
 
 BADGE_CRITERIA = {
     'notes_created_1': {'name': 'Not Defteri', 'description': 'İlk notunu oluşturdun!', 'icon': 'bi-journal-plus'},
@@ -133,9 +132,6 @@ def check_and_award_badges(user):
         newly_awarded_badges.append('eraser_master_5')
 
     # --- META ROZETLER (Diğer rozetlere göre) ---
-    # Bu kontrol, diğer tüm rozetler eklendikten sonra yapılmalı.
-    # `newly_awarded_badges` listesi, bu döngüde kazanılanları içerir.
-    # `user_badge_keys` ise önceden kazanılmış olanları.
     total_badges_count = len(user_badge_keys) + len(newly_awarded_badges)
     
     if total_badges_count >= 5 and 'mission_completed_5' not in user_badge_keys and 'mission_completed_5' not in newly_awarded_badges:
@@ -186,7 +182,7 @@ def add_note_post():
         return jsonify({"success": False, "message": "Başlık ve içerik boş bırakılamaz."}), 400
     
     # GÜVENLİK: HTML içeriğini temizle
-    allowed_tags = [] # Zengin metin editörü kaldırıldığı için HTML'e izin verme
+    allowed_tags = [] # İzin verilen HTML etiketleri (boş liste = tüm etiketler yasak)
     content = bleach.clean(raw_content, tags=allowed_tags)
 
     new_note = Note(title=title, content=content, user_id=current_user.id)
@@ -198,7 +194,7 @@ def add_note_post():
     # Rozet kontrolü
     new_badges = check_and_award_badges(current_user) # Genel kontroller
 
-    # YENİ: Düşünce Fırtınası rozeti için özel kontrol
+    #  Düşünce Fırtınası rozeti için özel kontrol
     if 'consecutive_notes_3' not in {b.criteria_key for b in current_user.badges}:
         last_three_notes = Note.query.filter_by(user_id=current_user.id).order_by(Note.created_at.desc()).limit(3).all()
         if len(last_three_notes) == 3:
@@ -236,8 +232,7 @@ def delete_note(note_id):
     if note.user_id != current_user.id:
         return jsonify({"success": False, "message": "Yetkisiz işlem"}), 403
     
-    # YENİ: Silme sayacını artır
-    # NoneType hatasını önlemek için kontrol ekleniyor
+    # Silme sayacını artır
     current_user.notes_deleted_count = (current_user.notes_deleted_count or 0) + 1
 
     db.session.delete(note)
@@ -296,7 +291,6 @@ def delete_all_notes():
 @dashboard_bp.route("/all_tasks_data")
 @login_required
 def all_tasks_data():
-    # SIRALAMAYI GÜNCELLE: Önce tamamlanma durumu, sonra özel sıra, sonra oluşturulma tarihi
     tasks = Task.query.filter_by(user_id=current_user.id).order_by(Task.completed, Task.order, Task.id.desc()).all()
     tasks_list = [
         {
@@ -320,7 +314,7 @@ def add_task_post():
     content = request.form.get("content")
     tag_string = request.form.get("tags", "")
     due_date_str = request.form.get("due_date")
-    starred = request.form.get("starred") == 'on' # YENİ: Yıldız durumu formdan alınıyor
+    starred = request.form.get("starred") == 'on' 
 
     if not title:
         return jsonify({"success": False, "message": "Başlık boş bırakılamaz!"}), 400
@@ -346,7 +340,7 @@ def add_task_post():
     # Rozet kontrolü
     new_badges = check_and_award_badges(current_user)
 
-    # YENİ: Erken Planlayıcı rozeti için özel kontrol
+    # Erken Planlayıcı rozeti için özel kontrol
     if due_date and (due_date - datetime.now()) >= timedelta(days=3) and 'early_planner_1' not in {b.criteria_key for b in current_user.badges}:
         badge = Badge.query.filter_by(criteria_key='early_planner_1').first()
         if badge and badge not in current_user.badges:
@@ -403,8 +397,6 @@ def update_task_post(task_id):
         task.due_date = None
 
     # Rozet kontrolü (özellikle "Zaman Yolcusu", "Etiket Ustası" ve "Not Düzenleyici" için)
-    # Not: Bu, `check_and_award_badges` fonksiyonunu çağırmak için iyi bir yerdir.
-    # Çünkü hem yeni etiketler eklenmiş olabilir hem de ilk kez bitiş tarihi girilmiş olabilir.
     new_badges = check_and_award_badges(current_user)
 
     db.session.commit()
@@ -425,7 +417,7 @@ def toggle_complete(task_id):
     # Rozet kontrolü
     new_badges = check_and_award_badges(current_user)
 
-    # YENİ: Zamana bağlı rozetler için özel kontrol
+    # Zamana bağlı rozetler için özel kontrol
     now_hour = datetime.now().hour
     now_weekday = datetime.now().weekday() # Pazartesi 0, Pazar 6
     user_badge_keys = {b.criteria_key for b in current_user.badges} # Güncel rozet anahtarlarını al
@@ -540,7 +532,7 @@ def overdue_tasks():
     ]
     return jsonify(tasks_list)
 
-# YENİ ROTA: Görev sıralamasını güncellemek için
+# Görev sıralamasını güncellemek için
 @dashboard_bp.route("/update_task_order", methods=["POST"])
 @login_required
 def update_task_order():
@@ -587,7 +579,11 @@ def update_user_settings():
     current_user.email = email
     db.session.commit()
 
-    return jsonify({"success": True, "message": "Kullanıcı bilgileri başarıyla güncellendi."})
+    return jsonify({
+        "success": True, 
+        "message": "Kullanıcı bilgileri başarıyla güncellendi.",
+        "user": {"username": current_user.username, "email": current_user.email}
+    })
 
 @dashboard_bp.route('/change_password', methods=['POST'])
 @login_required
@@ -607,7 +603,7 @@ def change_password():
     
     return jsonify({"success": True, "message": "Şifre başarıyla değiştirildi. Lütfen yeniden giriş yapın.", "redirect_logout": True})
 
-# YENİ ROTA: Avatar güncelleme
+# Avatar güncelleme
 @dashboard_bp.route('/update_avatar', methods=['POST'])
 @login_required
 def update_avatar():
@@ -620,7 +616,7 @@ def update_avatar():
     
     return jsonify({"success": True, "message": "Avatar başarıyla güncellendi.", "new_avatar_url": url_for('static', filename=f'img/avatars/{avatar_filename}')})
 
-# YENİ ROTA: Avatar seçim sayfasını sunar
+# Avatar seçim sayfasını sunar
 @dashboard_bp.route('/avatars')
 @login_required
 def avatars_page():
@@ -633,7 +629,7 @@ def avatars_page():
                            user=current_user, 
                            available_avatars=available_avatars)
 
-# YENİ ROTA: Rozetleri listelemek için
+# Rozetleri listelemek için
 @dashboard_bp.route('/badges')
 @login_required
 def badges_page():
@@ -664,7 +660,7 @@ def user_stats_html():
     # Bekleyen görev sayısı KRİTİK BİLGİ
     pending_tasks = db.session.scalar(db.select(db.func.count(Task.id)).filter_by(user_id=user_id, completed=False))
     
-    # Gecikmiş görev sayısı (YENİ)
+    # Gecikmiş görev sayısı KRİTİK BİLGİ
     overdue_tasks = db.session.scalar(
         db.select(db.func.count(Task.id)).filter(
             Task.user_id == user_id,
@@ -688,7 +684,7 @@ def user_stats_html():
         starred_count=starred_count
     )
 
-# YENİ ROTA: Kullanıcının tüm etiketlerini getirir
+# Kullanıcının tüm etiketlerini getirir
 @dashboard_bp.route("/get_tags")
 @login_required
 def get_tags():
@@ -702,14 +698,12 @@ def get_tags():
     tags_list = [{"id": tag.id, "name": tag.name} for tag in tags]
     return jsonify(tags_list)
 
-# YENİ ROTA: Belirli bir etikete ait notları ve görevleri getirir
+# Belirli bir etikete ait notları ve görevleri getirir
 @dashboard_bp.route("/get_items_by_tag/<int:tag_id>")
 @login_required
 def get_items_by_tag(tag_id):
     tag = Tag.query.filter_by(id=tag_id, user_id=current_user.id).first_or_404()
-
-    # HATA DÜZELTME: with_parent() yanlış kullanılmıştı.
-    # Doğru yöntem, .contains() ile ilişki üzerinden filtrelemektir.
+    
     notes = Note.query.filter(Note.user_id == current_user.id, Note.tags.contains(tag)).order_by(Note.last_updated.desc()).all()
     tasks = Task.query.filter(Task.user_id == current_user.id, Task.tags.contains(tag)).order_by(Task.completed, Task.order, Task.id.desc()).all()
 

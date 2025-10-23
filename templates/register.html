@@ -5,9 +5,21 @@
 {% block page_header %}{% endblock %}
 
 {% block content %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          <div style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050; width: auto; max-width: 80%;">
+              {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} alert-dismissible fade show shadow-lg" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+                  </div>
+              {% endfor %}
+          </div>
+      {% endif %}
+  {% endwith %}
+
   <div class="card p-5 shadow-xl auth-card">
     <h2 class="text-center mb-4 fw-light text-success">Yeni Hesap Oluştur</h2>
-    
     <form method="POST">
       <div class="mb-3">
         <label for="reg-username" class="form-label visually-hidden">Kullanıcı Adı</label>

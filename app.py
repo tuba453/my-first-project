@@ -72,14 +72,7 @@ def setup_periodic_tasks(sender, **kwargs):
     import tasks # tasks.py dosyasını import et
     # Her saat başı send_reminder_emails görevini çalıştır
     sender.add_periodic_task(
-        60.0, # TEST İÇİN: 60 saniyeye düşürüldü
+        3600.0, 
         tasks.send_reminder_emails.s(), 
         name='Her saat başı hatırlatıcıları kontrol et'
     )
-
-if __name__ == "__main__":
-    with app.app_context():
-        # İlk çalıştırmada db.create_all() yerine init_db.py kullanın
-        # db.create_all() 
-        pass 
-    app.run(debug=True)

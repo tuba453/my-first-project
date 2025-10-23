@@ -1,4 +1,4 @@
-// static/js/app.js (Tüm Form ve Butonları Destekleyen Son Sürüm)
+// static/js/app.js 
 document.addEventListener("DOMContentLoaded", function () {
     // --- TEMA DEĞİŞTİRME MANTIĞI ---
     const themeSwitcherButtons = document.querySelectorAll('[data-theme-value]');
@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const savedTheme = localStorage.getItem('theme') || 'light';
     htmlElement.setAttribute('data-theme', savedTheme);
 
-    // Aktif butonu işaretle
     document.querySelector(`[data-theme-value="${savedTheme}"]`)?.classList.add('active');
 
     themeSwitcherButtons.forEach(button => {
@@ -17,8 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
             htmlElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
 
-            // Tüm butonlardan 'active' sınıfını kaldır ve sadece tıklanana ekle
-            // DÜZELTME: 'btn-light' ve 'btn-dark' yerine 'active' sınıfını yönet
             themeSwitcherButtons.forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -34,13 +31,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let currentView = "home";
     
-    // YENİ: Etiketler için global dizi
     let selectedTags = [];
 
     // --- GENEL YARDIMCI FONKSİYONLAR ---
 
     function setActiveLink(linkId) {
+        // Hem sidebar linklerini hem de profil menüsü linklerini temizle
         document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
+        document.querySelectorAll(".dropdown-item").forEach(item => item.classList.remove("active"));
+
         const activeLink = document.getElementById(linkId);
         if (activeLink) activeLink.classList.add("active");
     }
@@ -58,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
         bsToast.show();
     }
 
-    // YENİ: Rozet kazanma bildirimi (hem toast hem de büyük modal/konfeti)
+    // Rozet kazanma bildirimi (hem toast hem de büyük modal/konfeti)
     function showBadgeToast(badge) {
         console.log("Attempting to show badge notification for:", badge.name); // Debugging line
 
@@ -66,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
         confetti({
             particleCount: 150,
             spread: 180,
-            origin: { y: 0.6 }, // Ekranın ortasından yukarı doğru
+            origin: { y: 0.6 }, 
             scalar: 1.2,
             startVelocity: 40,
             ticks: 300
@@ -75,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // 2. Büyük rozet kazanma modalını göster
         const badgeModalEl = document.getElementById('badgeEarnedModal');
         if (badgeModalEl) {
-            const badgeModal = new bootstrap.Modal(badgeModalEl);
+            const badgeModal = bootstrap.Modal.getOrCreateInstance(badgeModalEl);
             document.getElementById('badgeModalIcon').className = `bi ${badge.icon}`;
             document.getElementById('badgeModalName').textContent = badge.name;
             document.getElementById('badgeModalDescription').textContent = badge.description;
@@ -122,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const title = task.querySelector('h5').textContent.toLowerCase();
                 // Görevlerde sadece başlığa göre arama yapıyoruz.
                 if (title.includes(searchTerm)) {
-                    task.style.display = 'flex'; // flex, çünkü task-item'lar display:flex kullanıyor
+                    task.style.display = 'flex'; 
                 } else {
                     task.style.display = 'none';
                 }
@@ -263,8 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             </div>
         `;
-        
-        // DÜZELTME: Eğer hiç görev yoksa, tek bir "boş durum" mesajı göster
+
         if (tasks.length === 0 && currentView === 'all_tasks') {
             html += `<div class="alert alert-info mt-4">Henüz hiç göreviniz yok. "Yeni Görev" butonuna tıklayarak başlayabilirsiniz.</div>`;
         } else {
@@ -330,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
     }
 
-    // YENİ FONKSİYON: Etiketlenmiş içerik görünümü
+    // Etiketlenmiş içerik görünümü
     function createTagItemsHtml(data, tagName) {
         let html = `
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -343,7 +341,6 @@ document.addEventListener("DOMContentLoaded", function () {
             html += `<h4 class="mb-3 text-muted">Bu Etikete Sahip Notlar (${data.notes.length})</h4>`;
             html += '<div class="cards-grid">';
             data.notes.forEach(note => {
-                // createNotesGridHtml içindeki mantığı burada yeniden kullanıyoruz
                 const isStarred = note.starred;
                 const noteContent = encodeURIComponent(note.content || '');
                 let tagsHtml = `<div class="note-tags">${note.tags.map(tag => `<span class="badge bg-secondary">${tag}</span>`).join(' ')}</div>`;
@@ -378,7 +375,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Görevler bölümü
         if (data.tasks.length > 0) {
             html += `<h4 class="mt-4 mb-3 text-muted">Bu Etikete Sahip Görevler (${data.tasks.length})</h4>`;
-            // createTasksListHtml fonksiyonunu yeniden kullanmak yerine direkt listeyi oluşturuyoruz
             html += createTasksListHtml(data.tasks, '', false);
         }
         return html;
@@ -445,8 +441,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </form>
             </div>
         `;
-
-        // YENİ: Etiket ekleme mantığını burada bağlıyoruz
+        // Etiket ekleme mantığı
         const tagInput = document.getElementById('tagInput');
         const addTagButton = document.getElementById('addTagButton');
         const selectedTagsContainer = document.querySelector('.selected-tags');
@@ -501,7 +496,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function destroyTinyMCE() {
-        // TinyMCE kaldırıldığı için bu fonksiyon artık boş.
     }
 
     // Not Düzenleme Formu
@@ -512,7 +506,6 @@ window.loadEditNoteForm = function(noteId, title, content, tags) {
     const safeContent = decodeURIComponent(content);
     const tagsString = decodeURIComponent(tags || '');
     
-    // HTML içeriği, not verileriyle doldurulur
     contentArea.innerHTML = `
         <div class="form-card shadow-lg">
             <h3 class="text-center">Notu Düzenle</h3>
@@ -583,8 +576,6 @@ window.loadEditNoteForm = function(noteId, title, content, tags) {
                 </form>
             </div>
         `;
-
-        // Etiket ekleme mantığını buraya da ekliyoruz
         const tagInput = document.getElementById('tagInput');
         const addTagButton = document.getElementById('addTagButton');
         const selectedTagsContainer = document.querySelector('.selected-tags');
@@ -847,7 +838,19 @@ async function loadUserStats() {
             const result = await res.json();
             
             showToast(result.message, result.success ? "success" : "danger");
-            if (result.success) loadSettingsForm();
+            if (result.success) {
+                // 1. Üst menüdeki kullanıcı adını ve e-postayı güncelle
+                const dropdownUsername = document.querySelector('.dropdown-menu .fw-bold');
+                const dropdownEmail = document.querySelector('.dropdown-menu .text-muted');
+                if (dropdownUsername) dropdownUsername.textContent = result.user.username;
+                if (dropdownEmail) dropdownEmail.textContent = result.user.email;
+
+                // 2. Ayarlar sayfasındaki input alanlarını güncelle
+                const usernameInput = document.getElementById('username');
+                const emailInput = document.getElementById('email');
+                if (usernameInput) usernameInput.value = result.user.username;
+                if (emailInput) emailInput.value = result.user.email;
+            }
         });
     }
 }
@@ -1418,50 +1421,6 @@ function loadDeleteAccountForm() {
     `;
 }
 
-
-// loadSettingsForm fonksiyonunu **tam** haliyle güncelle
-async function loadSettingsForm() {
-    // 1. Durumu ve menü linkini ayarla
-    currentView = "settings";
-    setActiveLink('link-settings');
-    const contentArea = document.getElementById("mainContent");
-    if (!contentArea) return; 
-
-    // 2. Ayarlar sayfasının içeriğini sunucudan çek ve yükle
-    const response = await fetch("/dashboard/settings");
-    const html = await response.text();
-    contentArea.innerHTML = html;
-    
-    // 3. YENİ: Şifre Değiştirme Butonu Dinleyicisi
-    const changePassBtn = document.getElementById('link-change-password');
-    if (changePassBtn) {
-        // Bu fonksiyonun (loadChangePasswordForm) tanımlı olduğundan emin olun
-        changePassBtn.addEventListener('click', loadChangePasswordForm); 
-    }
-
-    // 4. YENİ: Hesap Silme Butonuna aksiyon ekle
-    const deleteAccountBtn = document.getElementById('btn-show-delete-form');
-    if (deleteAccountBtn) {
-        deleteAccountBtn.addEventListener('click', loadDeleteAccountForm);
-    }
-
-    // 5. YENİ: Kullanıcı Ayarları Formunu dinle (username/email güncelleme)
-    const userSettingsForm = document.getElementById('userSettingsForm');
-    if (userSettingsForm) {
-        userSettingsForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            
-            // update_settings rotasına AJAX isteği
-            const res = await fetch('/dashboard/update_settings', { method: 'POST', body: formData });
-            const result = await res.json();
-            
-            showToast(result.message, result.success ? "success" : "danger");
-            // Başarılı olursa formu yenile
-            if (result.success) loadSettingsForm();
-        });
-    }
-}
 
     // YENİ: Motivasyon modalını göster
     const welcomeModalElement = document.getElementById('welcomeModal');
