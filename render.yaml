@@ -19,7 +19,7 @@ services:
       # DÜZELTME: type: psql yerine type: database kullanıldı.
       - key: DATABASE_URL
         fromService:
-          type: database  # <<< Düzeltildi
+          type: database 
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
@@ -46,7 +46,7 @@ services:
       # DÜZELTME: type: psql yerine type: database kullanıldı.
       - key: DATABASE_URL
         fromService:
-          type: database  # <<< Düzeltildi
+          type: database  
           name: task-manager-db
           property: connectionString
       - key: CELERY_BROKER_URL
@@ -71,4 +71,7 @@ services:
 databases:
   - name: task-manager-db
     plan: free
+ipAllowList:
+      - source: 0.0.0.0/0 # Tüm IP'lerden erişime izin verir (Dikkatli kullanın!)
+        description: Dahili Render hizmetleri
     # Bu tanım, task-manager-db adlı bir PostgreSQL veritabanı oluşturacaktır.
