@@ -1,0 +1,63 @@
+<!-- all_tasks.html -->
+{% extends "base.html" %}
+{% block title %}Görevlerim{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+
+  <!-- Tüm Görevler -->
+  <div id="all-tasks-container">
+    <h3 class="mb-3">Tüm Görevlerim</h3>
+    {% if tasks %}
+      <div class="list-group" id="all-tasks-list">
+        {% for task in tasks if not task.completed %}
+          <div class="list-group-item d-flex justify-content-between align-items-center" id="task-card-{{ task.id }}">
+            <div>
+              <h5 class="mb-1">{{ task.title }}</h5>
+              <p class="mb-1 text-muted">{{ task.content }}</p>
+              <small>{{ task.due_date.strftime('%Y-%m-%d %H:%M') if task.due_date else '' }}</small>
+            </div>
+            <div>
+              <button class="btn btn-sm toggle-complete btn-outline-secondary" data-id="{{ task.id }}">
+                Tamamla
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Henüz görev eklenmemiş.</p>
+    {% endif %}
+  </div>
+
+  <!-- Tamamlanan Görevler -->
+  <div id="completed-tasks-container" class="mt-4">
+    <h3 class="mb-3">Tamamlanan Görevler</h3>
+    {% if tasks %}
+      <div class="list-group" id="completed-tasks-list">
+        {% for task in tasks if task.completed %}
+          <div class="list-group-item d-flex justify-content-between align-items-center" id="task-card-{{ task.id }}">
+            <div>
+              <h5 class="mb-1 text-success">{{ task.title }}</h5>
+              <p class="mb-1 text-muted">{{ task.content }}</p>
+              <small>{{ task.due_date.strftime('%Y-%m-%d %H:%M') if task.due_date else '' }}</small>
+            </div>
+            <div>
+              <button class="btn btn-sm toggle-complete btn-success" data-id="{{ task.id }}">
+                Geri Al
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Henüz tamamlanan görev yok.</p>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}
+
+
+

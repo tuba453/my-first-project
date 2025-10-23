@@ -1,0 +1,36 @@
+{% extends "auth_base.html" %}
+{% block title %}Hoş Geldiniz{% endblock %}
+
+{# Varsayılan başlığı kaldırıyoruz #}
+{% block page_header %}{% endblock %}
+
+{% block content %}
+<div id="splash-screen" class="text-center">
+    <h1 class="display-1 fw-bold splash-title">Görev & Not</h1>
+    <p class="lead fs-3 splash-subtitle">haydi odaklanmaya başlayalım</p>
+    <p class="mt-5 press-enter-prompt">Devam etmek için <strong>Enter</strong>'a basın</p>
+</div>
+
+<script>
+    // DÜZELTME: Bu sayfaya özel bir sınıf ekleyerek doğru arkaplanı uygula
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.add('welcome-body');
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const prompt = document.querySelector('.press-enter-prompt');
+        
+        // "Enter'a basın" yazısını yanıp söndürerek dikkat çekici hale getir
+        setInterval(() => {
+            prompt.style.opacity = prompt.style.opacity === '0' ? '1' : '0';
+        }, 700);
+
+        // Enter tuşuna basıldığında giriş ekranına yönlendir
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                window.location.href = "{{ url_for('auth.login') }}";
+            }
+        });
+    });
+</script>
+{% endblock %}

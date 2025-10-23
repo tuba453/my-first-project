@@ -1,0 +1,32 @@
+<div class="row row-cols-2 g-2 text-center">
+    
+    <div class="col">
+        <div class="p-2 border rounded bg-light border-primary border-2"> 
+            <i class="bi bi-journal-text fs-5 text-primary"></i>
+            <h6 class="mb-0 mt-1 fw-bold">{{ total_notes }}</h6>
+            <small class="text-muted">Toplam Not</small> </div>
+    </div>
+    
+    <div class="col">
+        <div class="p-2 border rounded bg-light border-warning border-2"> 
+            <i class="bi bi-list-task fs-5 text-warning"></i>
+            <h6 class="mb-0 mt-1 fw-bold">{{ pending_tasks }}</h6> 
+            <small class="text-muted">Bekleyen Görev</small> </div>
+    </div>
+    
+    <div class="col">
+        <div class="p-2 border rounded bg-light border-success border-2">
+            <i class="bi bi-check2-square fs-5 text-success"></i>
+            <h6 class="mb-0 mt-1 fw-bold">{{ completed_tasks }}</h6>
+            <small class="text-muted">Tamamlandı</small>
+        </div>
+    </div>
+    
+    <div class="col">
+        <div class="p-2 border rounded bg-light border-secondary border-2">
+            <i class="bi bi-star-fill fs-5 text-danger"></i>
+            <h6 class="mb-0 mt-1 fw-bold">{{ starred_count }}</h6>
+            <small class="text-muted">Yıldızlı Öğeler</small> </div>
+    </div>
+    
+</div>

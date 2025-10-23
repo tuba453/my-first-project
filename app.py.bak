@@ -1,0 +1,56 @@
+#app.py
+from flask import Flask, redirect, url_for, render_template, request, jsonify
+from config import Config
+from models import db, User, Note
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+from flask_migrate import Migrate
+from models import db
+from dashboard.routes import dashboard_bp
+
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+
+    db.init_app(app)
+    migrate = Migrate(app, db)
+
+    login_manager = LoginManager()
+    login_manager.login_view = "auth.login" 
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+    # Blueprints
+    from auth.routes import auth_bp
+    from dashboard.routes import dashboard_bp
+
+    app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(dashboard_bp, url_prefix="/dashboard")
+
+    @app.route("/")
+    def index():
+        if current_user.is_authenticated:
+            return redirect(url_for("dashboard.home"))
+        return redirect(url_for("auth.login"))
+
+    @app.route("/add_note", methods=["POST"])
+    @login_required
+    def add_note():
+        title = request.form.get("title")
+        content = request.form.get("content")
+        new_note = Note(title=title, content=content, user_id=current_user.id)
+        db.session.add(new_note)
+        db.session.commit()
+        return jsonify({"message": "Not kaydedildi!"})
+
+    return app
+
+if __name__ == "__main__":
+    app = create_app()
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
+
+

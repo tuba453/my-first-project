@@ -1,0 +1,16 @@
+templates/add_note_content.html
+<div id="ajax-content">
+  <h3>Yeni Not Ekle</h3>
+  <form method="POST" action="{{ url_for('dashboard.add_note') }}">
+    <div class="mb-3">
+      <label for="title" class="form-label">Başlık</label>
+      <input type="text" class="form-control" id="title" name="title" required>
+    </div>
+    <div class="mb-3">
+      <label for="content" class="form-label">İçerik</label>
+      <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Kaydet</button>
+  </form>
+</div>
+

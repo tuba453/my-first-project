@@ -1,0 +1,28 @@
+<!-- completed_tasks.html -->
+{% extends "base.html" %}
+{% block title %}Tamamlanan Görevler{% endblock %}
+{% block content %}
+<div class="container mt-3">
+  <h3 class="mb-3">Tamamlanan Görevler</h3>
+  {% if tasks %}
+    <div class="list-group">
+      {% for task in tasks %}
+        <div class="list-group-item d-flex justify-content-between align-items-center bg-light">
+          <div>
+            <h5 class="mb-1 text-success">{{ task.title }}</h5>
+            <p class="mb-1 text-muted">{{ task.content }}</p>
+            <small>{{ task.due_date.strftime('%Y-%m-%d %H:%M') if task.due_date else '' }}</small>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-warning btn-sm undo-task" data-id="{{ task.id }}">↩️ Geri Al</button>
+            <button class="btn btn-danger btn-sm delete-task" data-id="{{ task.id }}">🗑️ Sil</button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Henüz tamamlanan görev yok.</p>
+  {% endif %}
+</div>
+{% endblock %}
+

@@ -1,8 +1,23 @@
-venv/
+# Python
 __pycache__/
-*.pyc
-instance/
-.env
+*.py[cod]
+*$py.class
+
+# Sanal Ortam
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Veritabanı
+*.db
 *.sqlite3
-notes.db
-.DS_Store
+instance/
+
+# IDE/Editör Dosyaları
+.vscode/
+.idea/
+
+# Ortam Değişkenleri Dosyası
+.env

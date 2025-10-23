@@ -1,0 +1,22 @@
+<!-- templates/register.html -->
+{% extends "auth_base.html" %}
+{% block content %}
+  <div class="card p-4 shadow-sm">
+    <h4 class="text-center mb-3">Kayıt Ol</h4>
+    <form method="POST">
+      <div class="mb-3">
+        <input type="text" name="username" class="form-control" placeholder="Kullanıcı adı" required>
+      </div>
+      <div class="mb-3">
+        <input type="email" name="email" class="form-control" placeholder="E-posta" required>
+      </div>
+      <div class="mb-3">
+        <input type="password" name="password" class="form-control" placeholder="Şifre" required>
+      </div>
+      <button class="btn btn-success w-100" type="submit">Kayıt Ol</button>
+    </form>
+    <div class="text-center mt-3">
+      <small>Zaten hesabın var mı? <a href="{{ url_for('auth.login') }}">Giriş yap</a></small>
+    </div>
+  </div>
+{% endblock %}

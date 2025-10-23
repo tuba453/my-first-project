@@ -1,0 +1,14 @@
+<div class="container-fluid">
+    <h2 class="mb-4">🎨 Avatar Seçimi</h2>
+
+    <div class="form-card shadow-sm mb-4">
+        <p class="text-muted">Profil resminizi anında değiştirmek için aşağıdaki avatarlardan birine tıklayın.</p>
+        <div id="avatar-selection-grid" class="avatar-grid">
+            {% for avatar_filename in available_avatars %}
+                <div class="avatar-option {% if user.avatar == avatar_filename %}selected{% endif %}" data-filename="{{ avatar_filename }}" title="{{ avatar_filename.split('.')[0]|capitalize }}">
+                    <img src="{{ url_for('static', filename='img/avatars/' + avatar_filename) }}" alt="{{ avatar_filename.split('.')[0]|capitalize }}" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

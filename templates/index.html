@@ -1,29 +1,34 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="add-new">
-  <button class="btn-new">+ Yeni Not Ekle</button>
-</div>
+<!-- index.html -->
+{% extends "dashboard_base.html" %}
 
-<div class="cards-grid">
-  <!-- Örnek kartlar; ileride dinamik olarak DB'den gelecek -->
-  <div class="card">
-    <h3>Proje Planı</h3>
-    <p>Kısa özet: Flask ile temel not uygulaması için planlama.</p>
-  </div>
+{% block dashboard_content %}
+  <h2>Notlarım</h2>
+  <a href="{{ url_for('dashboard.add_note') }}">
+      <button>+ Yeni Not Ekle</button>
+  </a>
+  <ul>
+    {% for note in notes %}
+      <li>
+        <strong>{{ note.title }}</strong>
+        <p>{{ note.content }}</p>
 
-  <div class="card">
-    <h3>Alışveriş Listesi</h3>
-    <p>Süt, Ekmek, Yumurta</p>
-  </div>
+        <form action="{{ url_for('dashboard.update_note', note_id=note.id) }}" method="get">
+          <button type="submit">Düzenle</button>
+        </form>
+        <form method="POST" action="{{ url_for('dashboard.delete_note', note_id=note.id) }}">
+          <button type="submit">Sil</button>
+        </form>
+        <form action="{{ url_for('dashboard.toggle_star', note_id=note.id) }}" method="POST" style="display:inline;">
+          <button type="submit" class="star-btn">
+            {% if note.starred %}
+              ⭐
+            {% else %}
+              ☆
+            {% endif %}
+          </button>
+        </form>
 
-  <div class="card">
-    <h3>Haftalık Rapor</h3>
-    <p>Yapılacaklar ve notlar...</p>
-  </div>
-
-  <div class="card">
-    <h3>Düzenle</h3>
-    <p>UI düzenlemeleri, responsive kontrolü.</p>
-  </div>
-</div>
+      </li>
+    {% endfor %}
+  </ul>
 {% endblock %}

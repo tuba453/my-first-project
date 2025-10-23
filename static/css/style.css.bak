@@ -284,9 +284,9 @@ h1, h2, h3, h4, h5 { color: var(--text-dark); font-weight: 600; }
   transition: opacity 0.3s ease;
 }
 .user-icon {
-  width: 42px; height: 42px; border-radius: 50%; background: var(--accent);
+  width: 36px; height: 36px; border-radius: 50%; background: var(--accent);
   display: flex; align-items: center; justify-content: center; color: white;
-  font-weight: 700; font-size: 1rem;
+  font-weight: 700; font-size: 0.9rem;
 }
 /* Başlık için özel renk sınıfı */
 .text-brand {
@@ -887,26 +887,3 @@ h1, h2, h3, h4, h5 { color: var(--text-dark); font-weight: 600; }
     color: var(--sidebar-bg) !important; /* DÜZELTME: Temaya uygun derin yeşil yapıldı */
     text-shadow: none; /* Bu başlıklar için gölgeye gerek yok */
 }
-
-/* DÜZELTME: Sadece karşılama ekranının arkaplanını değiştir */
-.welcome-body {
-    background-image: url('../img/arkaplan_2.jpg') !important; /* DÜZELTME: .auth-container kuralını ezmek için !important eklendi */
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-}
-
-/* ---------- 20. Avatar Seçimi Stilleri ---------- */
-.avatar-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-.avatar-option {
-    width: 80px; height: 80px; border-radius: 50%; cursor: pointer;
-    border: 3px solid transparent; transition: all 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-.avatar-option:hover { border-color: var(--accent); transform: scale(1.05); }
-.avatar-option.selected { border-color: var(--success-color); box-shadow: 0 0 0 3px rgba(var(--success-color-rgb), 0.5); }

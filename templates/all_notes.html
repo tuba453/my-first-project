@@ -1,0 +1,19 @@
+<!-- all_notes.html -->
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<h3>Tüm Notlar</h3>
+
+{% if notes %}
+  <ul class="list-group">
+    {% for note in notes %}
+      <li class="list-group-item">
+        <h5>{{ note.title }}</h5>
+        <p>{{ note.content }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Henüz bir not eklemediniz.</p>
+{% endif %}
+{% endblock %}

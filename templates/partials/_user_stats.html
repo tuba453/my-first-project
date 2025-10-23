@@ -1,0 +1,22 @@
+<!-- templates/partials/_user_stats.html -->
+<style>
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        padding: 0.4rem 0;
+    }
+    .stat-item .badge {
+        font-size: 0.85rem;
+    }
+</style>
+
+<h6 class="dropdown-header px-0">İstatistiklerim</h6>
+<ul class="list-unstyled mb-0">
+    <li class="stat-item"><span><i class="bi bi-journal-text me-2 text-primary"></i> Toplam Not</span> <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">{{ total_notes }}</span></li>
+    <li class="stat-item"><span><i class="bi bi-list-task me-2 text-info"></i> Bekleyen Görev</span> <span class="badge bg-info-subtle text-info-emphasis rounded-pill">{{ pending_tasks }}</span></li>
+    <li class="stat-item"><span><i class="bi bi-calendar-x me-2 text-danger"></i> Gecikmiş Görev</span> <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill">{{ overdue_tasks }}</span></li>
+    <li class="stat-item"><span><i class="bi bi-check2-square me-2 text-success"></i> Tamamlanan Görev</span> <span class="badge bg-success-subtle text-success-emphasis rounded-pill">{{ completed_tasks }}</span></li>
+    <li class="stat-item border-top mt-1 pt-2"><span><i class="bi bi-star-fill me-2 text-warning"></i> Toplam Yıldızlı</span> <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill">{{ starred_count }}</span></li>
+</ul>

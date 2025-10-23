@@ -1,0 +1,53 @@
+{% extends "auth_base.html" %}
+{% block title %}Kayıt Ol{% endblock %}
+
+{# Varsayılan başlığı kaldırıyoruz #}
+{% block page_header %}{% endblock %}
+
+{% block content %}
+  <div class="card p-5 shadow-xl auth-card">
+    <h2 class="text-center mb-4 fw-light text-success">Yeni Hesap Oluştur</h2>
+    
+    <form method="POST">
+      <div class="mb-3">
+        <label for="reg-username" class="form-label visually-hidden">Kullanıcı Adı</label>
+        <div class="input-group input-group-lg">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input type="text" name="username" id="reg-username" class="form-control" 
+                   placeholder="Kullanıcı Adı" required>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="reg-email" class="form-label visually-hidden">E-posta</label>
+        <div class="input-group input-group-lg">
+            <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+            <input type="email" name="email" id="reg-email" class="form-control" 
+                   placeholder="E-posta Adresi" required>
+        </div>
+      </div>
+      
+      <div class="mb-4">
+        <label for="reg-password" class="form-label visually-hidden">Şifre</label>
+        <div class="input-group input-group-lg">
+            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+            <input type="password" name="password" id="reg-password" class="form-control" 
+                   placeholder="Şifre Oluşturun" required>
+        </div>
+      </div>
+      
+      <button class="btn btn-success btn-lg w-100 mb-3" type="submit">
+          <i class="bi bi-person-check-fill me-2"></i> Hesap Oluştur
+      </button>
+    </form>
+    
+    <div class="text-center mt-3">
+      <small>
+        Zaten hesabın var mı? 
+        <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-bold text-primary">
+            Giriş yap
+        </a>
+      </small>
+    </div>
+  </div>
+{% endblock %}

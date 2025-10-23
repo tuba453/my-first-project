@@ -1,0 +1,14 @@
+{% extends "dashboard_base.html" %}
+{% block dashboard_content %}
+<div id="ajax-content">
+  <h3>Notu Güncelle</h3>
+  <form method="POST">
+    <input class="form-control mb-2" name="title" value="{{ note.title }}" required>
+    <textarea class="form-control mb-2" name="content" rows="6" required>{{ note.content }}</textarea>
+    <button class="btn btn-primary" type="submit">Güncelle</button>
+    <a class="btn btn-secondary" href="{{ url_for('dashboard.all_notes') }}">İptal</a>
+  </form>
+</div>
+{% endblock %}
+
+

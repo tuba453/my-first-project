@@ -1,0 +1,18 @@
+{% extends "dashboard_base.html" %}
+
+{% block dashboard_content %}
+  <h2>⭐ Yıldızlı Notlarım</h2>
+
+  {% if notes %}
+    <ul>
+      {% for note in notes %}
+        <li>
+          <strong>{{ note.title }}</strong>
+          <p>{{ note.content }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Henüz yıldızlı bir not yok.</p>
+  {% endif %}
+{% endblock %}
