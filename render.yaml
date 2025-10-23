@@ -71,7 +71,7 @@ services:
 databases:
   - name: task-manager-db
     plan: free
-ipAllowList:
+    ipAllowList:
       - source: 0.0.0.0/0 # Tüm IP'lerden erişime izin verir (Dikkatli kullanın!)
         description: Dahili Render hizmetleri
     # Bu tanım, task-manager-db adlı bir PostgreSQL veritabanı oluşturacaktır.
