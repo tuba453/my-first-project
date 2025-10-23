@@ -20,10 +20,16 @@ def create_app():
         if database_url.startswith("postgres://"):
             database_url = database_url.replace("postgres://", "postgresql://", 1)
         app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-
-    print(f"DEBUG: DATABASE_URL from environment: {os.environ.get('DATABASE_URL')}")
-    print(f"DEBUG: Final SQLALCHEMY_DATABASE_URI: {app.config.get('SQLALCHEMY_DATABASE_URI')}")
-
+    
+    # GÜVENLİ DEBUG LOGLARI: Parolayı göstermeden bağlantı dizesini kontrol et
+    final_uri = app.config.get('SQLALCHEMY_DATABASE_URI')
+    if final_uri:
+        # Parolayı gizlemek için URI'yi parçala ve yeniden birleştir
+        safe_uri = final_uri.split('@')[0].rsplit(':', 1)[0] + '@' + final_uri.split('@')[1] if '@' in final_uri else final_uri
+        print(f"DEBUG: Final SQLALCHEMY_DATABASE_URI (güvenli): {safe_uri}")
+    else:
+        print("DEBUG: Final SQLALCHEMY_DATABASE_URI bulunamadı!")
+        
     # E-POSTA YAPILANDIRMASI
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 587
