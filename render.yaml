@@ -8,6 +8,7 @@ services:
     plan: free
     buildCommand: "pip install -r requirements.txt"
     releaseCommand: "flask db upgrade"
+    initialDeployHook: "flask db upgrade" # Sadece ilk kurulumda veritabanını oluşturmayı garanti eder
     startCommand: "gunicorn app:app" # Uygulamayı başlat
     envVars:
       - key: PYTHON_VERSION
