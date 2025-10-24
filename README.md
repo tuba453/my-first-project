@@ -148,7 +148,8 @@ Veritabanı şeması `models.py` dosyasında tanımlanmıştır ve **Flask-Migra
 
 1. **Depoyu Klonlayın:**
     ```bash
-    git clone https://github.com/tuba453/your-repo-name.git
+    git clone https://github.com/tuba453/my-first-project
+.git
     cd your-repo-name
     ```
 
