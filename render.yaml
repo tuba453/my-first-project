@@ -6,8 +6,8 @@ services:
     name: task-manager-web
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt" # Sadece kütüphaneleri kur
-    preDeployCommand: "flask db upgrade" # Dağıtımdan önce veritabanını migrate et
+    buildCommand: "pip install -r requirements.txt"
+    releaseCommand: "flask db upgrade"
     startCommand: "gunicorn app:app" # Uygulamayı başlat
     envVars:
       - key: PYTHON_VERSION
